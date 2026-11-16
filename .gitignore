@@ -1,0 +1,31 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# Secrets: never commit. .env.example (no real values) IS committed.
+.env
+.env.*
+!.env.example
+
+# Data: everything under data/ is ignored, except the .gitkeep files
+# that keep the empty folder structure in git.
+data/**
+!data/**/
+!data/**/.gitkeep
+
+# Tool caches
+.ruff_cache/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
