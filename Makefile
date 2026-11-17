@@ -1,5 +1,5 @@
 .DEFAULT_GOAL := help
-.PHONY: help install lint format test check hooks clean
+.PHONY: help install lint format test check hooks clean download
 
 help:  ## Show available commands
 	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-10s\033[0m %s\n", $$1, $$2}'
@@ -21,6 +21,9 @@ test:  ## Run the test suite
 
 check:  ## Run every pre-commit hook on every file
 	uv run pre-commit run --all-files
+
+download:  ## Download Rijden de Treinen monthly services into data/raw (skips existing)
+	uv run python -m ns_delay.download
 
 clean:  ## Remove caches
 	rm -rf .ruff_cache .pytest_cache
