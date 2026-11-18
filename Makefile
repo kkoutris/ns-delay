@@ -1,5 +1,5 @@
 .DEFAULT_GOAL := help
-.PHONY: help install lint format test check hooks clean download
+.PHONY: help install lint format test check hooks clean download process
 
 help:  ## Show available commands
 	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-10s\033[0m %s\n", $$1, $$2}'
@@ -24,6 +24,9 @@ check:  ## Run every pre-commit hook on every file
 
 download:  ## Download Rijden de Treinen monthly services into data/raw (skips existing)
 	uv run python -m ns_delay.download
+
+process:  ## Convert raw monthly CSVs in data/raw to Parquet in data/processed (overwrites)
+	uv run python -m ns_delay.process
 
 clean:  ## Remove caches
 	rm -rf .ruff_cache .pytest_cache

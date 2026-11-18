@@ -1,7 +1,7 @@
 """Typed, validated project configuration loaded from config.toml."""
 
 import tomllib
-from datetime import date
+from datetime import date, timedelta
 from functools import cache
 from importlib import resources
 from pathlib import Path
@@ -33,6 +33,17 @@ class SplitConfig(_Frozen):
                 "split dates must satisfy train_start < valid_start < test_start < test_end"
             )
         return self
+
+    @property
+    def first_month(self) -> tuple[int, int]:
+        """(year, month) of the first month in the split."""
+        return self.train_start.year, self.train_start.month
+
+    @property
+    def last_month(self) -> tuple[int, int]:
+        """(year, month) of the last month in the split. test_end is exclusive."""
+        last_day = self.test_end - timedelta(days=1)
+        return last_day.year, last_day.month
 
 
 class ScopeConfig(_Frozen):

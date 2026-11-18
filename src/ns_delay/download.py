@@ -10,7 +10,6 @@ Usage:
 import argparse
 import logging
 from collections.abc import Iterator
-from datetime import timedelta
 from pathlib import Path
 
 import httpx
@@ -90,7 +89,7 @@ def download_services_month(year: int, month: int, raw_dir: Path = DEFAULT_RAW_D
         raise
 
 
-def _parse_month(value: str) -> tuple[int, int]:
+def parse_month(value: str) -> tuple[int, int]:
     """argparse type: '2024-01' -> (2024, 1)."""
     try:
         year, month = (int(part) for part in value.split("-"))
@@ -103,13 +102,9 @@ def _parse_month(value: str) -> tuple[int, int]:
 
 def main() -> None:
     split = get_config().split
-    first_month = (split.train_start.year, split.train_start.month)
-    last_day = split.test_end - timedelta(days=1)  # test_end is exclusive
-    last_month = (last_day.year, last_day.month)
-
     parser = argparse.ArgumentParser(description="Download Rijden de Treinen monthly services.")
-    parser.add_argument("--start", type=_parse_month, default=first_month, help="YYYY-MM")
-    parser.add_argument("--end", type=_parse_month, default=last_month, help="YYYY-MM")
+    parser.add_argument("--start", type=parse_month, default=split.first_month, help="YYYY-MM")
+    parser.add_argument("--end", type=parse_month, default=split.last_month, help="YYYY-MM")
     parser.add_argument("--raw-dir", type=Path, default=DEFAULT_RAW_DIR)
     args = parser.parse_args()
 
