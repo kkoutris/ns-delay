@@ -1,0 +1,29 @@
+# Project configuration: the modelling decisions shared by ingestion, training and serving.
+# Loaded and validated by ns_delay.config.get_config(). Reasons: notebooks/01_station_selection.ipynb
+
+[target]
+# A departure is "late" if its departure delay is at least this many minutes.
+delay_threshold_minutes = 5
+
+[split]
+# Half-open periods: each period runs from its start date up to (not including) the next one.
+train_start = 2024-01-01
+valid_start = 2025-07-01
+test_start = 2026-01-01
+test_end = 2026-11-01
+
+[scope]
+# 20 stations, chosen on the training period only (see the notebook for the reason per station).
+stations = [
+    "ASD", "UT", "RTD", "SHL", "EHV", "GVC",                  # megastations
+    "ASDZ",                                                   # intercity station
+    "AMF", "LEDN", "ZL", "GN", "AH", "HGL", "BD", "HT", "MT", "DV",  # junction intercity
+    "WD", "GDM",                                              # junction stoptrein
+    "SDM",                                                    # stoptrein
+]
+
+# Allowlist of Rijden de Treinen `Service:Type` values to model. Anything else is excluded:
+# replacement services ("... ipv trein", delay not measured), international trains (delay
+# comes from abroad), and rare special types. An allowlist means new, unseen types are
+# excluded by default instead of silently included.
+service_types = ["Sprinter", "Stoptrein", "Intercity", "Sneltrein", "Intercity direct"]
